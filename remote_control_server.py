@@ -22,7 +22,7 @@ def drive(command):
     global state, robot
 
     # Split command. First comes what direction, then if pressed or released 
-    command = message.split()
+    command = command.split()
     if command[1] == "press":
         # Modify global state
         state[command[0]] += 1
@@ -70,8 +70,8 @@ def create_runner():
     return web.AppRunner(app)
 
 
-async def start_server(host="127.0.0.1", port=80):
-    # Start on port 80.
+async def start_server(host="0.0.0.0", port=8000):
+    # Start on port 8000.
     # If running through local network, it should be available to other devices. 
     # Otherwise you have to open it.
     runner = create_runner()

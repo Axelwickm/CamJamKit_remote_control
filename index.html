@@ -57,7 +57,7 @@
 <script>
 
 // Connect to websocket, which is hosted at same location as http-server
-var websocket_addr = "ws://"+window.location.hostname+"/ws";
+var websocket_addr = "ws://"+window.location.hostname+":"+window.location.port+"/ws";
 console.log("Connect to websocket server at: "+websocket_addr)
 var socket = new WebSocket(websocket_addr);
 
