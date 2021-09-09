@@ -7,10 +7,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body class="mid noselect" style="text-align:center;">
-   <div id="up" class="arrow" style="bottom:50%;">↑</div>
-   <div id="down" class="arrow" style="top:50%;">↓</div>
-   <div id="left" class="arrow" style="left:50%">→</div>
-   <div id="right" class="arrow" style="right: 50%">←</div>
+   <div id="up" class="arrow noselect" style="bottom:50%;">↑</div>
+   <div id="down" class="arrow noselect" style="top:50%;">↓</div>
+   <div id="left" class="arrow noselect" style="left:50%">→</div>
+   <div id="right" class="arrow noselect" style="right: 50%">←</div>
 </body>
 
 <style>
@@ -36,7 +36,6 @@
     font-size: 25vw;
     color: white;
     background-color: grey;
-    user-select: none;
 }
 
 .arrow:active {
@@ -57,10 +56,14 @@
 
 <script>
 
-<!-- up, down, left, right -->
-//var socket = new WebSocket("ws://axelwickman.com:2155");
-var socket = new WebSocket("ws://192.168.149.85:2155");
-//var socket = new WebSocket("ws://localhost:1337");
+// up, down, left, right
+var websocket_addr = "ws://"+window.location.hostname+":2155";
+console.log("Connect to websocket server at: "+websocket_addr)
+var socket = new WebSocket(websocket_addr);
+
+socket.onopen = function(){
+    console.logg("Connected to robot!");
+}
 
 socket.onerror = function(event) {
   console.error("WebSocket error observed:", event);
