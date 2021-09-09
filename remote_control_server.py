@@ -4,11 +4,13 @@ import aiohttp
 from aiohttp import web, WSCloseCode
 import asyncio
 
-#from gpiozero import CamJamKitRobot
-
-#robot = CamJamKitRobot()
+from gpiozero import CamJamKitRobot
 
 
+# Get robot
+robot = CamJamKitRobot()
+
+# This variable counts how many users currenly are pressing each direction
 state = {
     "up": 0,
     "down": 0,
@@ -17,28 +19,34 @@ state = {
 }
 
 def drive(command):
-    global state
+    global state, robot
+
+    # Split command. First comes what direction, then if pressed or released 
     command = message.split()
     if command[1] == "press":
+        # Modify global state
         state[command[0]] += 1
     elif command[1] == "release":
         state[command[0]] -= 1
     
-    left = right = 0.0
-    left += - state["up"] + state["down"] + state["left"] - state["right"]
-    right += - state["up"] + state["down"] + state["right"] - state["left"]
+    # Translate state to left and right motor direction
+    left = - state["up"] + state["down"] + state["left"] - state["right"]
+    right = - state["up"] + state["down"] + state["right"] - state["left"]
 
+    # Clamp between -1 and 1 (gets exception otherwise, so can't make it go faster :( ))
     left = min(max(left, -1), 1)
     right = min(max(right, -1), 1)
-    print(left, right)
-    #robot.value = (left, right)
+
+    robot.value = (left, right)
 
 
 async def http_handler(request):
+    # Serve http webpage
     return web.FileResponse("index.html")
 
 
 async def websocket_handler(request):
+    # Capute websocket messages
     ws = web.WebSocketResponse()
     await ws.prepare(request)
 
@@ -52,6 +60,7 @@ async def websocket_handler(request):
 
 
 def create_runner():
+    # Create runner for both http-webpage and websocket handler
     app = web.Application()
     app.add_routes([
         web.get("/", http_handler),
@@ -62,6 +71,9 @@ def create_runner():
 
 
 async def start_server(host="127.0.0.1", port=80):
+    # Start on port 80.
+    # If running through local network, it should be available to other devices. 
+    # Otherwise you have to open it.
     runner = create_runner()
     await runner.setup()
     site = web.TCPSite(runner, host, port)
