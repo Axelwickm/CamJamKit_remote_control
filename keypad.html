@@ -1,0 +1,118 @@
+<html>
+
+<head>
+    <title>Raspberry PI keypad</title>
+    <meta name="viewport" 
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body class="mid noselect" style="text-align:center;">
+   <div id="up" class="arrow" style="bottom:50%;">↑</div>
+   <div id="down" class="arrow" style="top:50%;">↓</div>
+   <div id="left" class="arrow" style="left:50%">→</div>
+   <div id="right" class="arrow" style="right: 50%">←</div>
+</body>
+
+<style>
+.mid {
+    position:absolute;
+    left:0;
+    right:0;
+    top: 0;
+    bottom: 0;
+}
+
+
+.arrow {
+    position:absolute;
+    padding-bottom: 4vw;
+    left:0;
+    right:0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 25vw;
+    height: 25vw;
+    font-size: 25vw;
+    color: white;
+    background-color: grey;
+    user-select: none;
+}
+
+.arrow:active {
+    background-color: blue;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+</style>
+
+<script>
+
+<!-- up, down, left, right -->
+//var socket = new WebSocket("ws://axelwickman.com:2155");
+var socket = new WebSocket("ws://192.168.149.85:2155");
+//var socket = new WebSocket("ws://localhost:1337");
+
+socket.onerror = function(event) {
+  console.error("WebSocket error observed:", event);
+};
+
+function arrowPress(e){
+    console.log("arrow press: ", e.target.id);
+    socket.send(e.target.id+" "+"press");
+}
+
+function arrowRelease(e){
+    console.log("arrow release ", e.target.id);
+    socket.send(e.target.id+" "+"release");
+}
+
+
+document.addEventListener("DOMContentLoaded", function(event) {
+    var arrows = document.getElementsByClassName('arrow');
+    for (var i = 0; i < arrows.length; i++){
+        arrows[i].addEventListener("touchstart", arrowPress, false);
+        arrows[i].addEventListener("touchend", arrowRelease, false);
+        arrows[i].addEventListener("mousedown", arrowPress, false);
+        arrows[i].addEventListener("mouseup", arrowRelease, false);
+    }
+    
+    addEventListener("keydown", function(event){
+        switch (event.key){
+            case "ArrowUp":
+            case "w":
+                arrowPress({target: {id: "up"}});
+                break;
+            case "ArrowDown":
+            case "s":
+                arrowPress({target: {id: "down"}});
+                break;
+            case "ArrowLeft":
+            case "a":
+                arrowPress({target: {id: "left"}});
+                break;
+            case "ArrowRight":
+            case "d":
+                arrowPress({target: {id: "right"}});
+                break;
+        
+        }
+    });  
+    
+});
+
+
+
+
+</script>
+
+</html>
