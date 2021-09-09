@@ -94,6 +94,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     // Let's also detect arrow-keys and WASP!
     addEventListener("keydown", function(event){
+        if (event.repeat){
+            return;
+        }
         switch (event.key){
             case "ArrowUp":
             case "w":
@@ -112,9 +115,33 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 arrowPress({target: {id: "right"}});
                 break;
         
-        }
-    });  
-    
+        }   
+    });
+
+    addEventListener("keyup", function(event){
+            if (event.repeat){
+                return;
+            }
+            switch (event.key){
+                case "ArrowUp":
+                case "w":
+                    arrowRelease({target: {id: "up"}});
+                    break;
+                case "ArrowDown":
+                case "s":
+                    arrowRelease({target: {id: "down"}});
+                    break;
+                case "ArrowLeft":
+                case "a":
+                    arrowRelease({target: {id: "left"}});
+                    break;
+                case "ArrowRight":
+                case "d":
+                    arrowRelease({target: {id: "right"}});
+                    break;
+            
+            }
+        });  
 });
 
 
