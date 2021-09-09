@@ -1,0 +1,3 @@
+gpiozero
+aiohttp
+asyncio
