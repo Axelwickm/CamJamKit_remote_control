@@ -35,8 +35,8 @@ def drive(command):
     elif command[1] == "release":
         state[command[0]] -= 1
     
-    # Don't allow negative
-    state[command[0]] = max(0, state[command[0]])
+    # Don't allow negative (this seems to cause problems)
+    #state[command[0]] = max(0, state[command[0]])
     
     # Translate state to left and right motor direction
     left = - state["up"] + state["down"] + state["left"] - state["right"]
